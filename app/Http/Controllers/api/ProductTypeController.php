@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\ProductType;
 
 class ProductTypeController extends Controller
 {
@@ -19,9 +21,17 @@ class ProductTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function create(Request $request)
     {
-        //
+        $product_type = new ProductType;
+        $product_type->name = $request->name;
+ 
+        $product_type->save();
+        
+        return response()->json([
+            'message' => 'success',
+            'data'=>$product_type
+        ], 200);
     }
 
     /**

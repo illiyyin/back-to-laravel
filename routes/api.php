@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/product_type', [ProductTypeController::class,'index']);
+Route::post('/product_type', [ProductTypeController::class,'create']);
