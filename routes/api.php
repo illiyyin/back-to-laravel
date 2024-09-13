@@ -4,7 +4,7 @@ use App\Http\Controllers\api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\ProductTypeController;
-
+use App\Http\Controllers\ProductBrandController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -21,3 +21,9 @@ Route::get('/product', [ProductController::class, 'index']);
 Route::delete('/product/{id}', [ProductController::class, 'delete']);
 Route::get('/product/{id}', [ProductController::class, 'show']);
 Route::put('/product/{id}', [ProductController::class, 'update']);
+
+Route::post('/product_brand', [ProductBrandController::class, 'create']);
+Route::get('/product_brand', [ProductBrandController::class, 'index']);
+Route::delete('/product_brand/{id}', [ProductBrandController::class, 'delete']);
+Route::get('/product_brand/{id}', [ProductBrandController::class, 'show']);
+Route::put('/product_brand/{id}', [ProductBrandController::class, 'update']);
