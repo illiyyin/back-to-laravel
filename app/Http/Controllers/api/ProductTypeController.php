@@ -15,7 +15,19 @@ class ProductTypeController extends Controller
     public function index()
     {
         //
-        return response()->json(['message' => 'Hello, World!'], 200);
+        $product_type =  ProductType::all();
+        $status_code = 200;
+        // if (is_null($product_type)) {
+        //     $status_code = 204;
+        //     return response()->json([
+        //         'message' => 'success',
+        //         'data' => $product_type
+        //     ], $status_code);
+        // }
+        return response()->json([
+            'message' => 'success',
+            'data' => $product_type
+        ], $status_code);
     }
 
     /**
@@ -25,12 +37,12 @@ class ProductTypeController extends Controller
     {
         $product_type = new ProductType;
         $product_type->name = $request->name;
- 
+
         $product_type->save();
-        
+
         return response()->json([
             'message' => 'success',
-            'data'=>$product_type
+            'data' => $product_type
         ], 200);
     }
 
@@ -40,6 +52,19 @@ class ProductTypeController extends Controller
     public function show(string $id)
     {
         //
+        $product_type =  ProductType::find($id);
+        $status_code = 200;
+        // if (is_null($product_type)) {
+        //     $status_code = 204;
+        //     return response()->json([
+        //         'message' => 'success',
+        //         'data' => $product_type
+        //     ], $status_code);
+        // }
+        return response()->json([
+            'message' => 'success',
+            'data' => $product_type
+        ], $status_code);
     }
 
     /**
@@ -48,13 +73,26 @@ class ProductTypeController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $product_type =  ProductType::find($id);
+        $product_type->name = $request->name;
+        $product_type->save();
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $product_type
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
         //
+        $product_type =  ProductType::find($id);
+        $product_type->delete();
+        return response()->json([
+            'message' => 'success'
+        ], 200);
     }
 }
