@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductType;
 
+
 class ProductTypeController extends Controller
 {
     /**
@@ -16,18 +17,11 @@ class ProductTypeController extends Controller
     {
         //
         $product_type =  ProductType::all();
-        $status_code = 200;
-        // if (is_null($product_type)) {
-        //     $status_code = 204;
-        //     return response()->json([
-        //         'message' => 'success',
-        //         'data' => $product_type
-        //     ], $status_code);
-        // }
+
         return response()->json([
-            'message' => 'success',
-            'data' => $product_type
-        ], $status_code);
+            'status' => 'success',
+            'data' => is_null($product_type) ? [] : $product_type
+        ], 200);
     }
 
     /**
@@ -35,13 +29,14 @@ class ProductTypeController extends Controller
      */
     public function create(Request $request)
     {
-        $product_type = new ProductType;
+        $product_type = new ProductType();
+
         $product_type->name = $request->name;
 
         $product_type->save();
 
         return response()->json([
-            'message' => 'success',
+            'status' => 'success',
             'data' => $product_type
         ], 200);
     }
@@ -53,18 +48,18 @@ class ProductTypeController extends Controller
     {
         //
         $product_type =  ProductType::find($id);
-        $status_code = 200;
-        // if (is_null($product_type)) {
-        //     $status_code = 204;
-        //     return response()->json([
-        //         'message' => 'success',
-        //         'data' => $product_type
-        //     ], $status_code);
-        // }
+
+        if (is_null($product_type)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => sprintf('id %s not found', $id)
+            ], 404);
+        }
+
         return response()->json([
-            'message' => 'success',
+            'status' => 'success',
             'data' => $product_type
-        ], $status_code);
+        ], 200);
     }
 
     /**
@@ -74,11 +69,12 @@ class ProductTypeController extends Controller
     {
         //
         $product_type =  ProductType::find($id);
+
         $product_type->name = $request->name;
         $product_type->save();
 
         return response()->json([
-            'message' => 'success',
+            'status' => 'success',
             'data' => $product_type
         ], 200);
     }
@@ -91,8 +87,9 @@ class ProductTypeController extends Controller
         //
         $product_type =  ProductType::find($id);
         $product_type->delete();
+
         return response()->json([
-            'message' => 'success'
+            'status' => 'success'
         ], 200);
     }
 }
