@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
-use App\Models\api\ProductBrand;
+use App\Http\Controllers\Controller;
+use App\Models\ProductBrand;
 use Illuminate\Http\Request;
 
 class ProductBrandController extends Controller
