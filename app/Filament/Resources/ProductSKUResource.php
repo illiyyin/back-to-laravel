@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Filament\Resources\ProductSKUResource\Pages;
+use App\Filament\Resources\ProductSKUResource\RelationManagers;
+use App\Models\Brand;
 use App\Models\Product;
-use App\Models\ProductType;
+use App\Models\ProductSKU;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,11 +15,14 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductResource extends Resource
+class ProductSKUResource extends Resource
 {
-    protected static ?string $model = Product::class;
+    protected static ?string $model = ProductSKU::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Product SKU';
+    protected ?string $subheading = 'Product SKU';
+    protected static ?string $slug = 'product-sku';
 
     public static function form(Form $form): Form
     {
@@ -28,9 +32,14 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('product_type_id')
-                    ->label('Product Type')
-                    ->options(ProductType::all()->pluck('name', 'id'))
+                Forms\Components\Select::make('product_id')
+                    ->label('Product')
+                    ->options(Product::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->required(),
+                Forms\Components\Select::make('brand_id')
+                    ->label('Brand')
+                    ->options(Brand::all()->pluck('name', 'id'))
                     ->searchable()
                     ->required()
             ]);
@@ -43,7 +52,9 @@ class ProductResource extends Resource
                 //
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('product_type.name')
+                Tables\Columns\TextColumn::make('product.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('brand.name')
                     ->searchable(),
             ])
             ->filters([
@@ -57,7 +68,8 @@ class ProductResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading('No Product SKU yet');;
     }
 
     public static function getRelations(): array
@@ -70,10 +82,10 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'view' => Pages\ViewProduct::route('/{record}'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListProductSKUS::route('/'),
+            'create' => Pages\CreateProductSKU::route('/create'),
+            'view' => Pages\ViewProductSKU::route('/{record}'),
+            'edit' => Pages\EditProductSKU::route('/{record}/edit'),
         ];
     }
 }
