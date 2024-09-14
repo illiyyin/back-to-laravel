@@ -28,7 +28,7 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                    Forms\Components\Select::make('product_type_id')
+                Forms\Components\Select::make('product_type_id')
                     ->label('Author')
                     ->options(ProductType::all()->pluck('name', 'id'))
                     ->searchable()
@@ -72,6 +72,7 @@ class ProductResource extends Resource
         return [
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
+            'view' => Pages\ViewProduct::route('/{record}'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }

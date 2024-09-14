@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
-class ProductBrandController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,11 +14,11 @@ class ProductBrandController extends Controller
     public function index()
     {
         //
-        $product_brand =  ProductBrand::all();
+        $brand =  Brand::all();
 
         return response()->json([
             'status' => 'success',
-            'data' => is_null($product_brand) ? [] : $product_brand
+            'data' => is_null($brand) ? [] : $brand
         ], 200);
     }
 
@@ -28,15 +28,15 @@ class ProductBrandController extends Controller
     public function create(Request $request)
     {
         //
-        $product_brand = new ProductBrand();
+        $brand = new Brand();
 
-        $product_brand->name = $request->name;
+        $brand->name = $request->name;
 
-        $product_brand->save();
+        $brand->save();
 
         return response()->json([
             'status' => 'success',
-            'data' => $product_brand
+            'data' => $brand
         ], 200);
     }
 
@@ -47,7 +47,7 @@ class ProductBrandController extends Controller
     {
         //
 
-        $product_type =  ProductBrand::find($id);
+        $product_type =  Brand::find($id);
 
         if (is_null($product_type)) {
             return response()->json([
@@ -68,14 +68,14 @@ class ProductBrandController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $product_brand =  ProductBrand::find($id);
+        $brand =  Brand::find($id);
 
-        $product_brand->name = $request->name;
-        $product_brand->save();
+        $brand->name = $request->name;
+        $brand->save();
 
         return response()->json([
             'status' => 'success',
-            'data' => $product_brand
+            'data' => $brand
         ], 200);
     }
 
@@ -85,8 +85,8 @@ class ProductBrandController extends Controller
     public function delete(string $id)
     {
         //
-        $product_brand =  ProductBrand::find($id);
-        $product_brand->delete();
+        $brand =  Brand::find($id);
+        $brand->delete();
 
         return response()->json([
             'status' => 'success'

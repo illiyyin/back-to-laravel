@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductTypeResource\Pages;
-use App\Filament\Resources\ProductTypeResource\RelationManagers;
-use App\Models\ProductType;
+use App\Filament\Resources\BrandResource\Pages;
+use App\Filament\Resources\BrandResource\RelationManagers;
+use App\Models\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductTypeResource extends Resource
+class BrandResource extends Resource
 {
-    protected static ?string $model = ProductType::class;
+    protected static ?string $model = Brand::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -33,20 +33,9 @@ class ProductTypeResource extends Resource
     {
         return $table
             ->columns([
+                //
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -72,10 +61,10 @@ class ProductTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProductTypes::route('/'),
-            'create' => Pages\CreateProductType::route('/create'),
-            'view' => Pages\ViewProductType::route('/{record}'),
-            'edit' => Pages\EditProductType::route('/{record}/edit'),
+            'index' => Pages\ListBrands::route('/'),
+            'create' => Pages\CreateBrand::route('/create'),
+            'view' => Pages\ViewBrand::route('/{record}'),
+            'edit' => Pages\EditBrand::route('/{record}/edit'),
         ];
     }
 }

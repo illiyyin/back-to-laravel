@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductSKU;
 use Illuminate\Http\Request;
@@ -48,9 +48,9 @@ class ProductSKUController extends Controller
         $product_sku->product_id = $product_id;
 
         $brand_id = $request->brand_id;
-        $product_brand = ProductBrand::find($brand_id);
+        $brand = Brand::find($brand_id);
 
-        if (is_null($product_brand)) {
+        if (is_null($brand)) {
             return response()->json([
                 'status' => 'error',
                 'message' => sprintf('brand_id %s not found', $brand_id)
@@ -112,9 +112,9 @@ class ProductSKUController extends Controller
         $product_sku->product_id = $product_id;
 
         $brand_id = $request->brand_id;
-        $product_brand = ProductBrand::find($brand_id);
+        $brand = Brand::find($brand_id);
 
-        if (is_null($product_brand)) {
+        if (is_null($brand)) {
             return response()->json([
                 'status' => 'error',
                 'message' => sprintf('brand_id %s not found', $brand_id)

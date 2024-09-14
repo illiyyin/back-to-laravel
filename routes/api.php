@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\ProductTypeController;
 use App\Http\Controllers\api\ProductController;
-use App\Http\Controllers\api\ProductBrandController;
+use App\Http\Controllers\api\BrandController;
 use App\Http\Controllers\api\ProductSKUController;
 
 Route::get('/user', function (Request $request) {
@@ -23,11 +23,11 @@ Route::delete('/product/{id}', [ProductController::class, 'delete']);
 Route::get('/product/{id}', [ProductController::class, 'show']);
 Route::put('/product/{id}', [ProductController::class, 'update']);
 
-Route::post('/product_brand', [ProductBrandController::class, 'create']);
-Route::get('/product_brand', [ProductBrandController::class, 'index']);
-Route::delete('/product_brand/{id}', [ProductBrandController::class, 'delete']);
-Route::get('/product_brand/{id}', [ProductBrandController::class, 'show']);
-Route::put('/product_brand/{id}', [ProductBrandController::class, 'update']);
+Route::post('/brand', [BrandController::class, 'create']);
+Route::get('/brand', [BrandController::class, 'index']);
+Route::delete('/brand/{id}', [BrandController::class, 'delete']);
+Route::get('/brand/{id}', [BrandController::class, 'show']);
+Route::put('/brand/{id}', [BrandController::class, 'update']);
 
 Route::post('/product_sku', [ProductSKUController::class, 'create']);
 Route::get('/product_sku', [ProductSKUController::class, 'index']);
