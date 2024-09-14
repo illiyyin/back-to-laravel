@@ -1,3 +1,3 @@
 <x-filament-panels::page>
-<div class="w-full bg-red-200"></div>
+  @livewire('create-post')
 </x-filament-panels::page>

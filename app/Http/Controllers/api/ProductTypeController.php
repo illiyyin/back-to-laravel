@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductType;
-
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class ProductTypeController extends Controller
 {
@@ -17,6 +17,7 @@ class ProductTypeController extends Controller
     {
         //
         $product_type =  ProductType::all();
+        Debugbar::info($product_type);
 
         return response()->json([
             'status' => 'success',
@@ -29,16 +30,28 @@ class ProductTypeController extends Controller
      */
     public function create(Request $request)
     {
-        $product_type = new ProductType();
-
-        $product_type->name = $request->name;
-
-        $product_type->save();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $product_type
-        ], 200);
+        try {
+            //code...
+            $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+            $product_type = new ProductType();
+    
+            $product_type->name = $request->name;
+    
+            $product_type->save();
+    
+            return response()->json([
+                'status' => 'success',
+                'data' => $product_type
+            ], 200);
+        } catch (\Throwable $e) {
+            //throw $th;
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
