@@ -66,7 +66,7 @@ class CreatePost extends Component implements HasForms
                 ->title('An error occurred while submitting the form')
                 ->danger()
                 ->send();
-            dd($e);
+            // dd($e);
         }
     }
 
