@@ -7,16 +7,43 @@ use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductSKU;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductSKUController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $productId = $request->input('product_id');
+        $brandId = $request->input('brand_id');
         //
-        $product_sku =  ProductSKU::all();
+        if (is_null($productId) && is_null($brandId)) {
+            $product_sku = ProductSKU::select('product_sku.name as name', 'brand.name as brand_name', 'product.name as product_name')
+                ->join('brand', 'product_sku.brand_id', '=', 'brand.id')
+                ->join('product', 'product_sku.product_id', '=', 'product.id')
+                ->get();
+        } else {
+            if (is_null($brandId)) {
+                // list product based on product id
+                $product_sku =  ProductSKU::select('product_sku.brand_id', DB::raw('MAX(product_sku.id) as id'), 'brand.name as brand_name','product.name as product_name')
+                    ->join('brand', 'product_sku.brand_id', '=', 'brand.id')
+                    ->join('product', 'product.id', '=', 'product_sku.product_id')
+                    ->where('product_sku.product_id', $productId)
+                    ->groupBy('product_sku.brand_id', 'brand.name')
+                    ->groupBy('product_sku.product_id', 'product.name')
+                    ->get();
+            } else {
+                //list product based on product id and brand id
+                $product_sku =  ProductSKU::select('product_sku.brand_id', 'brand.name as brand_name','product_sku.name','product_sku.id', 'product.name as product_name')
+                    ->join('brand', 'product_sku.brand_id', '=', 'brand.id')
+                    ->join('product', 'product_sku.product_id', '=', 'product.id')
+                    ->where('product_sku.brand_id', $brandId)
+                    ->where('product_sku.product_id', $productId)
+                    ->get();
+            }
+        }
 
         return response()->json([
             'status' => 'success',

@@ -9,11 +9,21 @@ use Filament\Resources\Pages\ListRecords;
 class ListProductSKUS extends ListRecords
 {
     protected static string $resource = ProductSKUResource::class;
+    
+    public function getTitle(): string
+    {
+        return 'Product SKU';
+    }
+
+    public function getHeading(): string
+    {
+        return 'List Product SKU';
+    }
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label('Create SKU'),
         ];
     }
 }

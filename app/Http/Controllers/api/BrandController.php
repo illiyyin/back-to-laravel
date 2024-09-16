@@ -14,7 +14,13 @@ class BrandController extends Controller
     public function index()
     {
         //
-        $brand =  Brand::all();
+        // $brand =  Brand::all();
+        $brand = Brand::select('brand.name as name', 'brand.id as id', 'product.name as product_name','product.id as product_id')
+            ->join('product_sku', 'product_sku.brand_id', '=', 'brand.id')
+            // ->join('product_sku','product_sku.product_id','=','product.id')
+            ->join('product', 'product.id', '=', 'product_sku.product_id')
+            ->groupBy('brand.id', 'brand.name', 'product.name','product.id')
+            ->get();
 
         return response()->json([
             'status' => 'success',
