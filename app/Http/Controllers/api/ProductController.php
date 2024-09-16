@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         //
         $product =  Product::all();
-        
+
         return response()->json([
             'status' => 'success',
             'data' => is_null($product) ? [] : $product
@@ -29,21 +29,26 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'product_type_id' => 'required|exists:products,id',
+        ]);
         $product = new Product();
 
-        $product->name = $request->name;
-        $product_type_id = $request->product_type_id;
+        $product->name = $validatedData['name'];
+        $product_type_id = $validatedData['product_type_id'];
 
-        $product_type = ProductType::find($product_type_id);
-
-        if (is_null($product_type)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => sprintf('product_type_id %s not found', $product_type_id)
-            ], 400);
+        if (!is_null($product_type_id)) {
+            $product_type = ProductType::find($product_type_id);
+            if (is_null($product_type)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => sprintf('product_type_id %s not found', $product_type_id)
+                ], 400);
+            }
+            $product->product_type_id = $product_type_id;
         }
 
-        $product->product_type_id = $product_type_id;
 
         $product->save();
 
@@ -80,22 +85,27 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         //
-
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'product_type_id' => 'required|exists:products,id',
+        ]);
         $product =  ProductType::find($id);
 
-        $product->name = $request->name;
-        $product_type_id = $request->product_type_id;
+        $product->name = $validatedData['name'];
+        $product_type_id = $validatedData['product_type_id'];
+        
+        if (!is_null($product_type_id)) {
+            $product_type = ProductType::find($product_type_id);
 
-        $product_type = ProductType::find($product_type_id);
+            if (is_null($product_type)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => sprintf('product_type_id %s not found', $product_type_id)
+                ], 400);
+            }
 
-        if (is_null($product_type)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => sprintf('product_type_id %s not found', $product_type_id)
-            ], 400);
+            $product->product_type_id = $product_type_id;
         }
-
-        $product->product_type_id = $product_type_id;
         $product->save();
 
         return response()->json([

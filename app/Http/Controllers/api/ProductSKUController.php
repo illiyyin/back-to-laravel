@@ -27,7 +27,7 @@ class ProductSKUController extends Controller
         } else {
             if (is_null($brandId)) {
                 // list product based on product id
-                $product_sku =  ProductSKU::select('product_sku.brand_id', DB::raw('MAX(product_sku.id) as id'), 'brand.name as brand_name','product.name as product_name')
+                $product_sku =  ProductSKU::select('product_sku.brand_id', DB::raw('MAX(product_sku.id) as id'), 'brand.name as brand_name', 'product.name as product_name')
                     ->join('brand', 'product_sku.brand_id', '=', 'brand.id')
                     ->join('product', 'product.id', '=', 'product_sku.product_id')
                     ->where('product_sku.product_id', $productId)
@@ -36,7 +36,7 @@ class ProductSKUController extends Controller
                     ->get();
             } else {
                 //list product based on product id and brand id
-                $product_sku =  ProductSKU::select('product_sku.brand_id', 'brand.name as brand_name','product_sku.name','product_sku.id', 'product.name as product_name')
+                $product_sku =  ProductSKU::select('product_sku.brand_id', 'brand.name as brand_name', 'product_sku.name', 'product_sku.id', 'product.name as product_name')
                     ->join('brand', 'product_sku.brand_id', '=', 'brand.id')
                     ->join('product', 'product_sku.product_id', '=', 'product.id')
                     ->where('product_sku.brand_id', $brandId)
@@ -57,10 +57,15 @@ class ProductSKUController extends Controller
     public function create(Request $request)
     {
         //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'product_id' => 'required|exists:products,id',
+            'brand_id' => 'required|exists:brands,id',
+        ]);
         $product_sku = new ProductSKU();
 
-        $product_sku->name = $request->name;
-        $product_id = $request->product_id;
+        $product_sku->name = $validatedData['name'];
+        $product_id = $validatedData['product_id'];
 
 
         $product = Product::find($product_id);
@@ -74,7 +79,7 @@ class ProductSKUController extends Controller
 
         $product_sku->product_id = $product_id;
 
-        $brand_id = $request->brand_id;
+        $brand_id = $validatedData['brand_id'];
         $brand = Brand::find($brand_id);
 
         if (is_null($brand)) {
@@ -121,34 +126,39 @@ class ProductSKUController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
         $product_sku =  ProductSKU::find($id);
 
-        $product_sku->name = $request->name;
+        $product_sku->name = $validatedData['name'];
+
         $product_id = $request->product_id;
-
-
-        $product = Product::find($product_id);
-
-        if (is_null($product)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => sprintf('product_id %s not found', $product_id)
-            ], 400);
+        if (!is_null($product_id)) {
+            $product = Product::find($product_id);
+            if (is_null($product)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => sprintf('product_id %s not found', $product_id)
+                ], 400);
+            }
+            $product_sku->product_id = $product_id;
         }
 
-        $product_sku->product_id = $product_id;
 
         $brand_id = $request->brand_id;
-        $brand = Brand::find($brand_id);
+        if (!is_null($brand_id)) {
 
-        if (is_null($brand)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => sprintf('brand_id %s not found', $brand_id)
-            ], 400);
+            $brand = Brand::find($brand_id);
+
+            if (is_null($brand)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => sprintf('brand_id %s not found', $brand_id)
+                ], 400);
+            }
+            $product_sku->brand_id = $brand_id;
         }
-
-        $product_sku->brand_id = $brand_id;
 
         $product_sku->save();
 

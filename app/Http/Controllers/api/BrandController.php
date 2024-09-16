@@ -34,9 +34,12 @@ class BrandController extends Controller
     public function create(Request $request)
     {
         //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
         $brand = new Brand();
 
-        $brand->name = $request->name;
+        $brand->name = $validatedData['name'];
 
         $brand->save();
 
@@ -74,9 +77,13 @@ class BrandController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
         $brand =  Brand::find($id);
 
-        $brand->name = $request->name;
+        $brand->name = $validatedData['name'];
+
         $brand->save();
 
         return response()->json([
